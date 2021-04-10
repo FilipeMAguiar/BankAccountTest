@@ -18,4 +18,10 @@ public class CartaoCredito {
     private Double limiteCartao;
 
     private boolean cartao;
+
+    private Pessoa pessoa;
+
+    private ChequeEspecial chequeEspecial;
+
+    private ContaCorrente contaCorrente;
 }

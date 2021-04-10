@@ -11,7 +11,6 @@ import south.bank.test.entity.ChequeEspecial;
 import south.bank.test.entity.ContaCorrente;
 import south.bank.test.entity.Pessoa;
 import south.bank.test.exception.BusinessException;
-import south.bank.test.repository.ContaRepository;
 import south.bank.test.repository.PessoaRepository;
 
 import java.util.*;
@@ -20,14 +19,15 @@ import java.util.*;
 @AllArgsConstructor
 public class PessoaService {
 
-    private final PessoaRepository repository;
-    private final ContaRepository contaRepository;
-    private final SequenceGeneratorService generatorService;
+    private static final String NOT_FOUND_MESSAGE_PESSOA_ID = "Não existe nenhuma pessoa cadastrada com este ID.";
+    private static final String NOT_FOUND_MESSAGE_PESSOA = "Não existe nenhuma pessoa cadastrada.";
+    private static final String NOME_NAO_INFORMADO = "O campo 'nome' deverá ser informado";
+    private static final String NRO_DOCTO_NAO_INFORMADO = "O campo 'numeroDocumento' deverá ser informado";
+    private static final String ERROR_MESSAGE_AGENCIA = "A 'agencia' deverá ser preenchido com um valor de 4 caractres";
+    private static final String ERROR_MESSAGE_NUMERO_DOCUMENTO = "O numeroDocumento deve conter 11 caracteres para pessoa física ou 14 caracteres para pessoa jurídica.";
 
-    private static final String NOT_FOUND_MESSAGE_PESSOA = "Não existe nenhuma pessoa cadastrada";
-    private static final String NOT_FOUND_MESSAGE_CONTA = "Não existe nenhuma conta cadastrada";
-    private static final String ERROR_MESSAGE_AGENCIA = "O campo 'agencia' deverá ser preenchido com um valor de 4 caractres";
-    private static final String ERROR_MESSAGE_NUMERO_DOCUMENTO = "O campo numeroDocumento deve conter 11 caracteres para pessoa física ou 14 caracteres para pessoa jurídica.";
+    private final PessoaRepository repository;
+    private final SequenceGeneratorService generatorService;
 
     public List<Pessoa> listarPessoa(Long id) throws BusinessException {
         if (Objects.isNull(id)){
@@ -40,28 +40,10 @@ public class PessoaService {
             List<Pessoa> pessoas = new ArrayList<>();
             Optional<Pessoa> pessoa = this.repository.findById(id);
             if (pessoa.isEmpty()){
-                throw new BusinessException(NOT_FOUND_MESSAGE_PESSOA);
+                throw new BusinessException(NOT_FOUND_MESSAGE_PESSOA_ID);
             }
             pessoa.ifPresent(pessoas::add);
             return pessoas;
-        }
-    }
-
-    public List<ContaCorrente> listarContas(Long id) throws BusinessException {
-        if (Objects.isNull(id)){
-            List<ContaCorrente> contas = this.contaRepository.findAll();
-            if (contas.isEmpty()){
-                throw new BusinessException(NOT_FOUND_MESSAGE_CONTA);
-            }
-            return contas;
-        } else {
-            List<ContaCorrente> contas = new ArrayList<>();
-            Optional<ContaCorrente> conta = this.contaRepository.findById(id);
-            if (conta.isEmpty()){
-                throw new BusinessException(NOT_FOUND_MESSAGE_CONTA);
-            }
-            conta.ifPresent(contas::add);
-            return contas;
         }
     }
 
@@ -72,8 +54,9 @@ public class PessoaService {
         CartaoCredito cartaoCredito = new CartaoCredito();
         ChequeEspecial chequeEspecial = new ChequeEspecial();
 
-        setAgenciaAndNumero(request, random, conta);
+        validaNome(request);
         validaNumeroDocumentoAndSetTipoConta(request, pessoa, conta);
+        setAgenciaAndNumero(request, random, conta);
         checkScoreAndSetLimites(pessoa, cartaoCredito, chequeEspecial, random);
         setPessoa(request, pessoa, conta, cartaoCredito, chequeEspecial);
 
@@ -81,27 +64,38 @@ public class PessoaService {
         return pessoa;
     }
 
+    private void validaNome(PessoaRequest request) throws BusinessException {
+        String nome = request.getNome();
+        if (Objects.isNull(nome) || StringUtils.isEmpty(nome)) {
+            throw new BusinessException(NOME_NAO_INFORMADO);
+        }
+    }
+
+    private void validaNumeroDocumentoAndSetTipoConta(PessoaRequest request, Pessoa pessoa, ContaCorrente conta) throws BusinessException {
+        if (Objects.isNull(request.getNumeroDocumento()) || StringUtils.isEmpty(request.getNumeroDocumento())){
+            throw new BusinessException(NRO_DOCTO_NAO_INFORMADO);
+        } else if (request.getNumeroDocumento().length() == 11 || request.getNumeroDocumento().length() == 14) {
+            if (request.getNumeroDocumento().length() == 11) {
+                conta.setTipoConta(TipoContaEnum.C);
+                pessoa.setTipoPessoa(TipoPessoaEnum.PF);
+            } else {
+                conta.setTipoConta(TipoContaEnum.E);
+                pessoa.setTipoPessoa(TipoPessoaEnum.PJ);
+            }
+        } else {
+            throw new BusinessException(ERROR_MESSAGE_NUMERO_DOCUMENTO);
+        }
+    }
+
     private void setAgenciaAndNumero(PessoaRequest request, Random random, ContaCorrente conta) throws BusinessException {
         if (Objects.isNull(request.getAgencia()) || StringUtils.isEmpty(request.getAgencia())){
             conta.setAgencia(random.nextInt(9999));
-        } else if (request.getAgencia() == 4){
+        } else if (request.getAgencia().toString().length() == 4){
             conta.setAgencia(request.getAgencia());
         } else {
             throw new BusinessException(ERROR_MESSAGE_AGENCIA);
         }
         conta.setNumero(random.nextInt(999999));
-    }
-
-    private void setPessoa(PessoaRequest request, Pessoa pessoa, ContaCorrente conta, CartaoCredito cartaoCredito, ChequeEspecial chequeEspecial) {
-        pessoa.setId(generatorService.generateSequence(Pessoa.SEQUENCE_NAME));
-        conta.setId(generatorService.generateSequence(ContaCorrente.SEQUENCE_NAME));
-        cartaoCredito.setId(generatorService.generateSequence(CartaoCredito.SEQUENCE_NAME));
-        chequeEspecial.setId(generatorService.generateSequence(ChequeEspecial.SEQUENCE_NAME));
-        pessoa.setNome(request.getNome());
-        pessoa.setNumeroDocumento(request.getNumeroDocumento());
-        pessoa.setCartaoCredito(cartaoCredito);
-        pessoa.setChequeEspecial(chequeEspecial);
-        pessoa.setContaCorrente(conta);
     }
 
     private void checkScoreAndSetLimites(Pessoa pessoa, CartaoCredito cartaoCredito, ChequeEspecial chequeEspecial, Random random) {
@@ -120,7 +114,7 @@ public class PessoaService {
             cartaoCredito.setLimiteCartao(2000.00);
             chequeEspecial.setChequeEspecial(true);
             chequeEspecial.setLimiteChequeEspecial(2000.00);
-        } else {
+        } else if (pessoa.getScore() >= 9 && pessoa.getScore() <= 10){
             cartaoCredito.setCartao(true);
             cartaoCredito.setLimiteCartao(15000.00);
             chequeEspecial.setChequeEspecial(true);
@@ -128,17 +122,15 @@ public class PessoaService {
         }
     }
 
-    private void validaNumeroDocumentoAndSetTipoConta(PessoaRequest request, Pessoa pessoa, ContaCorrente conta) throws BusinessException {
-        if (request.getNumeroDocumento().length() == 11 || request.getNumeroDocumento().length() == 14) {
-            if (request.getNumeroDocumento().length() == 11) {
-                conta.setTipoConta(TipoContaEnum.C);
-                pessoa.setTipoPessoa(TipoPessoaEnum.PF);
-            } else {
-                conta.setTipoConta(TipoContaEnum.E);
-                pessoa.setTipoPessoa(TipoPessoaEnum.PJ);
-            }
-        } else {
-            throw new BusinessException(ERROR_MESSAGE_NUMERO_DOCUMENTO);
-        }
+    private void setPessoa(PessoaRequest request, Pessoa pessoa, ContaCorrente conta, CartaoCredito cartaoCredito, ChequeEspecial chequeEspecial) {
+        pessoa.setId(generatorService.generateSequence(Pessoa.SEQUENCE_NAME));
+        conta.setId(generatorService.generateSequence(ContaCorrente.SEQUENCE_NAME));
+        cartaoCredito.setId(generatorService.generateSequence(CartaoCredito.SEQUENCE_NAME));
+        chequeEspecial.setId(generatorService.generateSequence(ChequeEspecial.SEQUENCE_NAME));
+        pessoa.setNome(request.getNome());
+        pessoa.setNumeroDocumento(request.getNumeroDocumento());
+        conta.setCartaoCredito(cartaoCredito);
+        conta.setChequeEspecial(chequeEspecial);
+        pessoa.setContaCorrente(conta);
     }
 }
