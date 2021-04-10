@@ -30,7 +30,7 @@ public class ContaServiceTest {
 
     @Mock
     private ContaRepository repository;
-
+/*
     @Test(expected = BusinessException.class)
     public void listarContaEmptyTest() throws BusinessException {
         Long request = 123L;
@@ -65,4 +65,6 @@ public class ContaServiceTest {
         assertTrue(list.isEmpty());
         verify(this.service, atLeastOnce()).listarContas(any());
     }
+
+ */
 }

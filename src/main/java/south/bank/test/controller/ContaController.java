@@ -19,7 +19,7 @@ public class ContaController {
     private final ContaService service;
 
     @GetMapping
-    public List<Conta> listarContas(@RequestParam(required = false) Long id) throws BusinessException {
-        return this.service.listarContas(id);
+    public List<Conta> listarContas() {
+        return this.service.listarContas();
     }
 }

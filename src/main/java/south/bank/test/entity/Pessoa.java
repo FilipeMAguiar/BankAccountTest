@@ -17,18 +17,8 @@ public class Pessoa {
     public static final String SEQUENCE_NAME = "pessoa_sequence";
 
     @Id
-    private long id;
-
-    @NotBlank(message = "O campo nome deve ser preenchido.")
-    private String nome;
-
-    @NotNull(message = "O campo tipoPessoa deve ser preenchido com: PF (Pessoa Física) ou PJ (Pessoa Jurídica).")
-    private TipoPessoaEnum tipoPessoa;
-
-    @NotBlank(message = "O campo numeroDocumento deve ser preenchido")
     private String numeroDocumento;
-
+    private String nomePessoa;
+    private TipoPessoaEnum tipoPessoa;
     private Integer score;
-
-    private Conta conta;
 }

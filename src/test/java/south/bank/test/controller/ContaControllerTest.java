@@ -26,7 +26,7 @@ public class ContaControllerTest {
 
     @Mock
     private ContaService service;
-
+/*
     @Test
     public void listarContaCorrentesTest() throws BusinessException {
         List<Conta> list = new EasyRandom().objects(Conta.class,5).collect(Collectors.toList());
@@ -36,4 +36,6 @@ public class ContaControllerTest {
         verify(service, atLeastOnce()).listarContas(123L);
         assertNotNull(response);
     }
+
+ */
 }

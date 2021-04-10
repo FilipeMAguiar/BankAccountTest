@@ -14,20 +14,12 @@ public class Conta {
     public static final String SEQUENCE_NAME = "conta_sequence";
 
     @Id
-    private long id;
-
-    private Integer numero;
-
+    private Integer numeroConta;
     private Integer agencia;
-
     private TipoContaEnum tipoConta;
-
     private Double limiteChequeEspecial;
-
-    private boolean isChequeEspecial;
-
     private Double limiteCartao;
-
+    private boolean isChequeEspecial;
     private boolean cartao;
 
 }

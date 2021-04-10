@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 public class SimpleMongoConfig {
     @Bean
     public MongoClient mongo() {
-        ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/test");
+        ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/SouthSystemTestDb");
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
                 .build();
@@ -21,7 +21,7 @@ public class SimpleMongoConfig {
     }
 
     @Bean
-    public MongoTemplate mongoTemplate() throws Exception {
-        return new MongoTemplate(mongo(), "test");
+    public MongoTemplate mongoTemplate() {
+        return new MongoTemplate(mongo(), "SouthSystemTestDb");
     }
 }
