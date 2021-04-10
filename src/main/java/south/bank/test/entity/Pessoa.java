@@ -30,5 +30,5 @@ public class Pessoa {
 
     private Integer score;
 
-    private ContaCorrente contaCorrente;
+    private Conta conta;
 }
