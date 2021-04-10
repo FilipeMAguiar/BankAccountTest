@@ -6,9 +6,7 @@ import org.springframework.util.StringUtils;
 import south.bank.test.domain.TipoContaEnum;
 import south.bank.test.domain.TipoPessoaEnum;
 import south.bank.test.dto.request.PessoaRequest;
-import south.bank.test.entity.CartaoCredito;
-import south.bank.test.entity.ChequeEspecial;
-import south.bank.test.entity.ContaCorrente;
+import south.bank.test.entity.Conta;
 import south.bank.test.entity.Pessoa;
 import south.bank.test.exception.BusinessException;
 import south.bank.test.repository.PessoaRepository;
@@ -50,15 +48,13 @@ public class PessoaService {
     public Pessoa criarPessoa(PessoaRequest request) throws BusinessException {
         Random random = new Random();
         Pessoa pessoa = new Pessoa();
-        ContaCorrente conta = new ContaCorrente();
-        CartaoCredito cartaoCredito = new CartaoCredito();
-        ChequeEspecial chequeEspecial = new ChequeEspecial();
+        Conta conta = new Conta();
 
         validaNome(request);
         validaNumeroDocumentoAndSetTipoConta(request, pessoa, conta);
         setAgenciaAndNumero(request, random, conta);
-        checkScoreAndSetLimites(pessoa, cartaoCredito, chequeEspecial, random);
-        setPessoa(request, pessoa, conta, cartaoCredito, chequeEspecial);
+        checkScoreAndSetLimites(pessoa, conta, random);
+        setPessoa(request, pessoa, conta);
 
         this.repository.save(pessoa);
         return pessoa;
@@ -71,7 +67,7 @@ public class PessoaService {
         }
     }
 
-    private void validaNumeroDocumentoAndSetTipoConta(PessoaRequest request, Pessoa pessoa, ContaCorrente conta) throws BusinessException {
+    private void validaNumeroDocumentoAndSetTipoConta(PessoaRequest request, Pessoa pessoa, Conta conta) throws BusinessException {
         if (Objects.isNull(request.getNumeroDocumento()) || StringUtils.isEmpty(request.getNumeroDocumento())){
             throw new BusinessException(NRO_DOCTO_NAO_INFORMADO);
         } else if (request.getNumeroDocumento().length() == 11 || request.getNumeroDocumento().length() == 14) {
@@ -87,7 +83,7 @@ public class PessoaService {
         }
     }
 
-    private void setAgenciaAndNumero(PessoaRequest request, Random random, ContaCorrente conta) throws BusinessException {
+    private void setAgenciaAndNumero(PessoaRequest request, Random random, Conta conta) throws BusinessException {
         if (Objects.isNull(request.getAgencia()) || StringUtils.isEmpty(request.getAgencia())){
             conta.setAgencia(random.nextInt(9999));
         } else if (request.getAgencia().toString().length() == 4){
@@ -98,39 +94,37 @@ public class PessoaService {
         conta.setNumero(random.nextInt(999999));
     }
 
-    private void checkScoreAndSetLimites(Pessoa pessoa, CartaoCredito cartaoCredito, ChequeEspecial chequeEspecial, Random random) {
+    private void checkScoreAndSetLimites(Pessoa pessoa, Conta conta, Random random) {
         pessoa.setScore(random.nextInt(10));
         if (pessoa.getScore() <= 1){
-            cartaoCredito.setCartao(false);
-            cartaoCredito.setLimiteCartao(0.00);
-            chequeEspecial.setChequeEspecial(false);
+            conta.setHasCartao(false);
+            conta.setLimiteCartaoCredito(0.00);
+            conta.setHasChequeEspecial(false);
         } else if (pessoa.getScore() >=2 && pessoa.getScore() <= 5){
-            cartaoCredito.setCartao(true);
-            cartaoCredito.setLimiteCartao(200.00);
-            chequeEspecial.setChequeEspecial(true);
-            chequeEspecial.setLimiteChequeEspecial(1000.00);
+            conta.setHasCartao(true);
+            conta.setLimiteCartaoCredito(200.00);
+            conta.setHasChequeEspecial(true);
+            conta.setLimiteChequeEspecial(1000.00);
         } else if (pessoa.getScore() >= 6 && pessoa.getScore() <= 8){
-            cartaoCredito.setCartao(true);
-            cartaoCredito.setLimiteCartao(2000.00);
-            chequeEspecial.setChequeEspecial(true);
-            chequeEspecial.setLimiteChequeEspecial(2000.00);
-        } else if (pessoa.getScore() >= 9 && pessoa.getScore() <= 10){
-            cartaoCredito.setCartao(true);
-            cartaoCredito.setLimiteCartao(15000.00);
-            chequeEspecial.setChequeEspecial(true);
-            chequeEspecial.setLimiteChequeEspecial(5000.00);
+            conta.setHasCartao(true);
+            conta.setLimiteCartaoCredito(2000.00);
+            conta.setHasChequeEspecial(true);
+            conta.setLimiteChequeEspecial(2000.00);
+        } else if (pessoa.getScore() == 9){
+            conta.setHasCartao(true);
+            conta.setLimiteCartaoCredito(15000.00);
+            conta.setHasChequeEspecial(true);
+            conta.setLimiteChequeEspecial(5000.00);
         }
     }
 
-    private void setPessoa(PessoaRequest request, Pessoa pessoa, ContaCorrente conta, CartaoCredito cartaoCredito, ChequeEspecial chequeEspecial) {
-        pessoa.setId(generatorService.generateSequence(Pessoa.SEQUENCE_NAME));
-        conta.setId(generatorService.generateSequence(ContaCorrente.SEQUENCE_NAME));
-        cartaoCredito.setId(generatorService.generateSequence(CartaoCredito.SEQUENCE_NAME));
-        chequeEspecial.setId(generatorService.generateSequence(ChequeEspecial.SEQUENCE_NAME));
+    private void setPessoa(PessoaRequest request, Pessoa pessoa, Conta conta) {
+        pessoa.setIdPessoa(generatorService.generateSequence(Pessoa.SEQUENCE_NAME));
+        pessoa.setIdConta(conta.getIdConta());
         pessoa.setNome(request.getNome());
         pessoa.setNumeroDocumento(request.getNumeroDocumento());
-        conta.setCartaoCredito(cartaoCredito);
-        conta.setChequeEspecial(chequeEspecial);
-        pessoa.setContaCorrente(conta);
+        pessoa.setNumeroContaCorrente(conta.getNumero());
+        pessoa.setAgenciaContaCorrente(conta.getAgencia());
+        pessoa.setTipoContaCorrente(conta.getTipoConta());
     }
 }

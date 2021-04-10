@@ -1,14 +1,23 @@
 package south.bank.test.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CNPJ;
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
+import south.bank.test.domain.TipoContaEnum;
 import south.bank.test.domain.TipoPessoaEnum;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Data
 @Document(collection = "pessoa")
 public class Pessoa {
@@ -17,18 +26,25 @@ public class Pessoa {
     public static final String SEQUENCE_NAME = "pessoa_sequence";
 
     @Id
-    private long id;
+    private Long idPessoa;
 
-    @NotBlank(message = "O campo nome deve ser preenchido.")
+    @NotNull
+    @NotBlank
+    private String numeroDocumento;
+
+    @NotNull
+    @NotBlank
     private String nome;
 
-    @NotNull(message = "O campo tipoPessoa deve ser preenchido com: PF (Pessoa Física) ou PJ (Pessoa Jurídica).")
+    @NotNull
+    @NotBlank
     private TipoPessoaEnum tipoPessoa;
-
-    @NotBlank(message = "O campo numeroDocumento deve ser preenchido")
-    private String numeroDocumento;
 
     private Integer score;
 
-    private ContaCorrente contaCorrente;
+    //atributos de relação
+    private long idConta;
+    private long numeroContaCorrente;
+    private Integer agenciaContaCorrente;
+    private TipoContaEnum tipoContaCorrente;
 }

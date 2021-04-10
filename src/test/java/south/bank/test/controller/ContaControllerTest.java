@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import south.bank.test.entity.ContaCorrente;
+import south.bank.test.entity.Conta;
 import south.bank.test.exception.BusinessException;
 import south.bank.test.service.ContaService;
 
@@ -29,9 +29,9 @@ public class ContaControllerTest {
 
     @Test
     public void listarContaCorrentesTest() throws BusinessException {
-        List<ContaCorrente> list = new EasyRandom().objects(ContaCorrente.class,5).collect(Collectors.toList());
+        List<Conta> list = new EasyRandom().objects(Conta.class,5).collect(Collectors.toList());
         when(this.service.listarContas(123L)).thenReturn(list);
-        List<ContaCorrente> response = this.controller.listarContas(123L);
+        List<Conta> response = this.controller.listarContas(123L);
 
         verify(service, atLeastOnce()).listarContas(123L);
         assertNotNull(response);

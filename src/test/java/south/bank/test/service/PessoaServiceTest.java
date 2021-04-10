@@ -69,7 +69,7 @@ public class PessoaServiceTest {
         assertTrue(list.isEmpty());
         verify(this.service, atLeastOnce()).listarPessoa(null);
     }
-
+/*
     @Test
     public void criarPessoaFisicaTest() throws BusinessException {
         Pessoa pessoa = new EasyRandom().nextObject(Pessoa.class);
@@ -189,4 +189,6 @@ public class PessoaServiceTest {
 
         assertNotNull(response);
     }
+
+ */
 }
