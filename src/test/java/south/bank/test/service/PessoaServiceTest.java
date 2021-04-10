@@ -31,8 +31,6 @@ public class PessoaServiceTest {
     @Mock
     private PessoaRepository repository;
 
-    @Mock
-    private SequenceGeneratorService generatorService;
 /*
     @Test
     public void listarPessoaTest() throws BusinessException {
