@@ -17,5 +17,11 @@ public class ChequeEspecial {
 
     private Double limiteChequeEspecial;
 
-    private boolean chequeEspecial;
+    private boolean isChequeEspecial;
+
+    private Pessoa pessoa;
+
+    private ContaCorrente contaCorrente;
+
+    private CartaoCredito cartaoCredito;
 }

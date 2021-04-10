@@ -21,4 +21,10 @@ public class ContaCorrente {
     private Integer agencia;
 
     private TipoContaEnum tipoConta;
+
+    private Pessoa pessoa;
+
+    private ChequeEspecial chequeEspecial;
+
+    private CartaoCredito cartaoCredito;
 }

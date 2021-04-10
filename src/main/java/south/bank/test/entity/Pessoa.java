@@ -2,9 +2,8 @@ package south.bank.test.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.Document;
 import south.bank.test.domain.TipoPessoaEnum;
 
 import javax.validation.constraints.NotBlank;
@@ -31,12 +30,5 @@ public class Pessoa {
 
     private Integer score;
 
-    @DBRef
     private ContaCorrente contaCorrente;
-
-    @DBRef
-    private CartaoCredito cartaoCredito;
-
-    @DBRef
-    private ChequeEspecial chequeEspecial;
 }
