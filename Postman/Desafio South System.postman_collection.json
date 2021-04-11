@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"nome\":\"testeCnpj\",\n    \"numeroDocumento\": \"0123456789012312\",\n    \"agencia\": \"\"\n}",
+					"raw": "{\n    \"nome\":\"PESSOA\",\n    \"numeroDocumento\": \"23875780078\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -20,13 +20,13 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/pessoas",
+					"raw": "localhost:8080/pessoa",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"pessoas"
+						"pessoa"
 					]
 				},
 				"description": "Endpoint criado para o cadastro de uma nova Pessoa Física ou Jurídica.\n\n\nPayload exemplo a ser usado no Body:\n\n{\n    \"nome\":\"SeuNome\",\n    \"numeroDocumento\": \"NumeroDoSeuDocumento\",\n    \"agencia\": \"NumeroDaSuaAgencia\"\n}\n\nLembrando que:\n\n- Se não for informado o campo \"nome\", o sistema deverá informar o usuário para que preencha corretamente.\n\n- Se não for informado o campo \"numeroDocumento\", o sistema deverá informar o usuário para que preencha corretamente.\n\n- Se o campo \"numeroDocument\" for de tamanho 11, o sistema automaticamente reconhece como uma pessoa física.\n\n- Se o campo \"numeroDocumento\" for de tamanho 14, o sistema automaticamente reconhece como uma pessoa jurídica.\n\n- Se o campo \"numeroDocumento\" for diferente de 11 ou 14, o sistema deverá informar o usuário para que preencha corretamente.\n\n- Se o campo \"agencia\" não for enviado ou estiver em branco, o sistema irá gerar uma agencia aleatória em um intervalo entre 0000 ~ 9999.\n\n- Se o campo \"agencia\" for informado com um valor superior a 4 dígitos, o sistema deverá informar o usuário para que preencha corretamente."
@@ -39,20 +39,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/pessoas",
+					"raw": "localhost:8080/pessoa",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"pessoas"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "6",
-							"disabled": true
-						}
+						"pessoa"
 					]
 				},
 				"description": "Endpoint criado para buscar pessoas na base.\n\nLembrando que:\n\n- Se o id for informado, a API trará apenas um registro.\n\n- Se o id não for informado, a API trará todos os registros."
@@ -65,20 +58,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/contas",
+					"raw": "localhost:8080/conta",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"contas"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "6",
-							"disabled": true
-						}
+						"conta"
 					]
 				},
 				"description": "Endpoint criado para listar contas.\n\nLembrando que:\n\n- Se não for passado o id, será feito uma busca por todos os registros.\n\n- Se for passado o id, a api retornará apenas um registro."
