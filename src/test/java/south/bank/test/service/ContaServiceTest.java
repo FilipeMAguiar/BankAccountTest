@@ -37,6 +37,7 @@ public class ContaServiceTest {
         List<Conta> contas = new EasyRandom().objects(Conta.class, 5).collect(Collectors.toList());
         when(this.repository.findAll()).thenReturn(contas);
         List<Conta> response = this.service.listarContas();
+
         assertNotNull(response);
     }
 
@@ -54,6 +55,7 @@ public class ContaServiceTest {
         request.setAgencia(1234);
         pessoa.setTipoPessoa(TipoPessoaEnum.PF);
         when(this.service.criarConta(conta, pessoa, request)).thenReturn(conta);
+
         assertEquals(TipoContaEnum.C, conta.getTipoConta());
     }
 
@@ -64,6 +66,7 @@ public class ContaServiceTest {
         PessoaRequest request = new EasyRandom().nextObject(PessoaRequest.class);
         request.setAgencia(1234);
         pessoa.setTipoPessoa(TipoPessoaEnum.PJ);
+
         when(this.service.criarConta(conta, pessoa, request)).thenReturn(conta);
         assertEquals(TipoContaEnum.E, conta.getTipoConta());
     }
@@ -74,6 +77,7 @@ public class ContaServiceTest {
         Pessoa pessoa = new EasyRandom().nextObject(Pessoa.class);
         PessoaRequest request = new EasyRandom().nextObject(PessoaRequest.class);
         request.setAgencia(null);
+
         when(this.service.criarConta(conta, pessoa, request)).thenReturn(conta);
         assertNotNull(conta.getAgencia());
     }
@@ -84,6 +88,7 @@ public class ContaServiceTest {
         Pessoa pessoa = new EasyRandom().nextObject(Pessoa.class);
         PessoaRequest request = new EasyRandom().nextObject(PessoaRequest.class);
         request.setAgencia(12345);
+
         when(this.service.criarConta(conta, pessoa, request)).thenThrow(BusinessException.class);
         assertNotNull(request.getAgencia());
     }
@@ -96,6 +101,7 @@ public class ContaServiceTest {
         request.setAgencia(1234);
         pessoa.setScore(3);
         pessoa.setTipoPessoa(TipoPessoaEnum.PF);
+
         when(this.service.criarConta(conta, pessoa, request)).thenReturn(conta);
         assertEquals(TipoContaEnum.C, conta.getTipoConta());
     }
@@ -107,6 +113,7 @@ public class ContaServiceTest {
         request.setAgencia(4312);
         pessoa.setScore(7);
         pessoa.setTipoPessoa(TipoPessoaEnum.PF);
+
         when(this.service.criarConta(conta, pessoa, request)).thenReturn(conta);
         assertEquals(TipoContaEnum.C, conta.getTipoConta());
     }
@@ -118,6 +125,7 @@ public class ContaServiceTest {
         request.setAgencia(4444);
         pessoa.setScore(9);
         pessoa.setTipoPessoa(TipoPessoaEnum.PF);
+
         when(this.service.criarConta(conta, pessoa, request)).thenReturn(conta);
         assertEquals(TipoContaEnum.C, conta.getTipoConta());
     }
@@ -130,6 +138,7 @@ public class ContaServiceTest {
         request.setAgencia(5423);
         pessoa.setScore(10);
         pessoa.setTipoPessoa(TipoPessoaEnum.PF);
+
         when(this.service.criarConta(conta, pessoa, request)).thenReturn(conta);
         assertEquals(TipoContaEnum.C, conta.getTipoConta());
     }
