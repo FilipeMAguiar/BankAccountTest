@@ -27,14 +27,14 @@ public class PessoaControllerTest {
 
     @Mock
     private PessoaService service;
-/*
+
     @Test
     public void listarPessoasTest() throws BusinessException {
         List<Pessoa> list = new EasyRandom().objects(Pessoa.class,5).collect(Collectors.toList());
-        when(this.service.listarPessoa(123L)).thenReturn(list);
-        List<Pessoa> response = this.controller.listarPessoas(123L);
+        when(this.service.listarPessoa()).thenReturn(list);
+        List<Pessoa> response = this.controller.listarPessoas();
 
-        verify(service, atLeastOnce()).listarPessoa(123L);
+        verify(service, atLeastOnce()).listarPessoa();
         assertNotNull(response);
     }
 
@@ -48,6 +48,4 @@ public class PessoaControllerTest {
         verify(service, atLeastOnce()).criarPessoa(request);
         assertNotNull(response);
     }
-
- */
 }

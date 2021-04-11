@@ -20,10 +20,15 @@ import java.util.Random;
 public class ContaService {
 
     private static final String ERROR_MESSAGE_AGENCIA = "A 'agencia' deverá ser preenchido com um valor de 4 caractres";
+    private static final String NOT_FOUND_MESSAGE_CONTAS = "Não existe nenhuma conta cadastrada.";
 
     private final ContaRepository contaRepository;
 
-    public List<Conta> listarContas() {
+    public List<Conta> listarContas() throws BusinessException {
+        List<Conta> contas = contaRepository.findAll();
+        if (contas.isEmpty()){
+            throw new BusinessException(NOT_FOUND_MESSAGE_CONTAS);
+        }
         return this.contaRepository.findAll();
     }
 
@@ -50,7 +55,7 @@ public class ContaService {
     }
 
     private void setAgencia(PessoaRequest request, Conta conta) throws BusinessException {
-        Random random = new Random();
+        Random random = new Random(System.currentTimeMillis());
         if (Objects.isNull(request.getAgencia()) || StringUtils.isEmpty(request.getAgencia())){
             conta.setAgencia(random.nextInt(9999));
         } else if (request.getAgencia().toString().length() == 4){
@@ -75,7 +80,13 @@ public class ContaService {
             conta.setLimiteCartao(2000.00);
             conta.setChequeEspecial(true);
             conta.setLimiteChequeEspecial(2000.00);
-        } else if (pessoa.getScore() >= 9 && pessoa.getScore() <= 10){
+        } else if (pessoa.getScore() == 9){
+            conta.setCartao(true);
+            conta.setLimiteCartao(15000.00);
+            conta.setChequeEspecial(true);
+            conta.setLimiteChequeEspecial(5000.00);
+        } else if (pessoa.getScore() == 10){
+            pessoa.setScore(9);
             conta.setCartao(true);
             conta.setLimiteCartao(15000.00);
             conta.setChequeEspecial(true);

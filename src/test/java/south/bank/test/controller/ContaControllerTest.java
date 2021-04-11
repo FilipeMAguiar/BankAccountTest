@@ -26,16 +26,14 @@ public class ContaControllerTest {
 
     @Mock
     private ContaService service;
-/*
+
     @Test
     public void listarContaCorrentesTest() throws BusinessException {
         List<Conta> list = new EasyRandom().objects(Conta.class,5).collect(Collectors.toList());
-        when(this.service.listarContas(123L)).thenReturn(list);
-        List<Conta> response = this.controller.listarContas(123L);
+        when(this.service.listarContas()).thenReturn(list);
+        List<Conta> response = this.controller.listarContas();
 
-        verify(service, atLeastOnce()).listarContas(123L);
+        verify(service, atLeastOnce()).listarContas();
         assertNotNull(response);
     }
-
- */
 }

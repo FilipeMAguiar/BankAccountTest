@@ -6,9 +6,6 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import south.bank.test.domain.TipoPessoaEnum;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 @Data
 @Document(collection = "pessoa")
 public class Pessoa {

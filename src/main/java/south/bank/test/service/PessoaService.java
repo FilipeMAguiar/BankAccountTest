@@ -1,9 +1,6 @@
 package south.bank.test.service;
 
 import lombok.AllArgsConstructor;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import south.bank.test.domain.TipoPessoaEnum;
@@ -13,7 +10,10 @@ import south.bank.test.entity.Pessoa;
 import south.bank.test.exception.BusinessException;
 import south.bank.test.repository.PessoaRepository;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
 
 @Service
 @AllArgsConstructor
@@ -26,7 +26,6 @@ public class PessoaService {
 
     private final PessoaRepository repository;
     private final ContaService contaService;
-    private final MongoOperations mongoOperation;
 
     public List<Pessoa> listarPessoa() throws BusinessException {
         List<Pessoa> pessoas = repository.findAll();
@@ -50,8 +49,7 @@ public class PessoaService {
     }
 
     private void validaNumeroDocumento(PessoaRequest request) throws BusinessException {
-        Long nroDoc = Long.parseLong(removeCaracteresEspeciais(request.getNumeroDocumento()));
-        Optional <Pessoa> pessoa = repository.findById(nroDoc);
+        Optional <Pessoa> pessoa = repository.findByNumeroDocumento(request.getNumeroDocumento());
         if (pessoa.isPresent()){
             throw new BusinessException("Cadastro existente.");
         }
