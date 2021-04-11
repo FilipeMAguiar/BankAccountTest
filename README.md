@@ -38,6 +38,7 @@ https://robomongo.org/
 
 <h2 align="center"> Para rodar o projeto: </h2>
 
+- Certifique-se de que o MongoDB esta online;
 - Importe a collection "Desafio South System.postman_collection.json" para o seu postman;
 - Rode SouthSystemTestApplication.java;
 - Execute a chamada via postman;
