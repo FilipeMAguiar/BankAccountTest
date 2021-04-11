@@ -6,20 +6,22 @@
 
 <p align="center">SouthSystemTest v1.0.0</p>
 
-<h2 align="center">Esta API permite:</h2>
+<h2 align="center"> Esta API permite:</h2>
+
 - Cadastrar pessoa;
 - Buscar contas;
 - Buscar pessoas;
 <p> * Lembrando que as descrições dos endpoints estão na collection do postman anexado ao repositório do projeto na pasta "Postman".</p>
 
 <h2 align="center">Para rodar o projeto, devemos ter instalado:</h2>
+
 - MongoDB
 - Java 11
 - IDE de sua preferência
 
 <h2 align="center">Para criar ambiente MongoDB </h2>
 
-Execute os seguintes comandos para criar mongoDB:
+Execute os seguintes comandos:
 
 - sudo docker pull mongo:4.0.4
 - sudo docker run -d -p 27017-27019:27017-27019 --name SouthSystemTestDb mongo:4.0.4
