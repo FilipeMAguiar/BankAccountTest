@@ -40,6 +40,7 @@ public class PessoaServiceTest {
         List<Pessoa> pessoas = new EasyRandom().objects(Pessoa.class, 5).collect(Collectors.toList());
         when(this.repository.findAll()).thenReturn(pessoas);
         List<Pessoa> response = this.service.listarPessoa();
+
         assertNotNull(response);
     }
 
@@ -62,9 +63,9 @@ public class PessoaServiceTest {
         when(this.service.criarPessoa(request)).thenReturn(pessoa);
         when(this.contaService.criarConta(conta, pessoa, request)).thenReturn(conta);
         Pessoa response = this.service.criarPessoa(request);
+
         verify(this.repository, atLeastOnce()).save(any());
         assertSame(TipoPessoaEnum.PF, pessoa.getTipoPessoa());
-
         assertNotNull(response);
     }
 
@@ -82,7 +83,6 @@ public class PessoaServiceTest {
 
         Pessoa response = this.service.criarPessoa(request);
         assertSame(TipoPessoaEnum.PJ, pessoa.getTipoPessoa());
-
         assertNotNull(response);
     }
 
@@ -91,6 +91,7 @@ public class PessoaServiceTest {
         PessoaRequest request = new PessoaRequest();
         request.setNome(null);
         when(this.service.criarPessoa(request)).thenThrow(BusinessException.class);
+
         verify(this.service, atLeastOnce()).criarPessoa(request);
     }
 
@@ -99,6 +100,7 @@ public class PessoaServiceTest {
         PessoaRequest pessoa = new EasyRandom().nextObject(PessoaRequest.class);
         pessoa.setNumeroDocumento(null);
         when(this.service.criarPessoa(pessoa)).thenThrow(BusinessException.class);
+
         verify(this.service, atLeastOnce()).criarPessoa(pessoa);
     }
 
@@ -110,6 +112,7 @@ public class PessoaServiceTest {
         service.criarPessoa(pessoa);
         when(this.repository.findByNumeroDocumento(pessoa.getNumeroDocumento())).thenReturn(optionalPessoa);
         when(this.service.criarPessoa(pessoa)).thenThrow(BusinessException.class);
+
         verify(this.service, atLeastOnce()).criarPessoa(pessoa);
     }
 
@@ -121,6 +124,7 @@ public class PessoaServiceTest {
         optionalPessoa.setNumeroDocumento("123");
         when(this.repository.findByNumeroDocumento("123")).thenReturn(Optional.of(optionalPessoa));
         when(this.service.criarPessoa(pessoa)).thenReturn(optionalPessoa);
+
         verify(this.service, atLeastOnce()).criarPessoa(pessoa);
         assertSame(pessoa.getNumeroDocumento(), optionalPessoa.getNumeroDocumento());
     }
