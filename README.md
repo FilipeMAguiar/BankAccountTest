@@ -19,14 +19,14 @@
 - Java 11
 - IDE de sua preferência
 
-<h2 align="center">Para criar ambiente MongoDB </h2>
+<h2 align="center">Para criar ambiente MongoDB: </h2>
 
 Execute os seguintes comandos:
 
 - sudo docker pull mongo:4.0.4
 - sudo docker run -d -p 27017-27019:27017-27019 --name SouthSystemTestDb mongo:4.0.4
 
-<h2 align="center">Links úteis</h2>
+<h2 align="center">Links úteis:</h2>
 
 ```
 Exemplo de configuração MongoDB link:
