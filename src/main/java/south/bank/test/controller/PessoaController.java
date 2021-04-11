@@ -19,8 +19,8 @@ public class PessoaController {
     private final PessoaService service;
 
     @GetMapping
-    public List<Pessoa> listarPessoas(@RequestParam(required = false) Long id) throws BusinessException {
-        return this.service.listarPessoa(id);
+    public List<Pessoa> listarPessoas() throws BusinessException {
+        return this.service.listarPessoa();
     }
 
     @PostMapping
